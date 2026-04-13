@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/FloatingPawnMovement.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 #include "Snake.generated.h"
 
 UCLASS()
@@ -26,4 +29,26 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Components
+	UPROPERTY(VisibleAnywhere, category = "Components")
+	UStaticMeshComponent* MeshComponent;
+	
+	UPROPERTY(VisibleAnywhere, category = "Movement")
+	UFloatingPawnMovement* FloatingMovement;
+	
+	//Input actions for enhanced input
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveForwardAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveRightAction;
+	
+	//Input mapping context
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputMappingContext* InputMappingContext;
+	
+	//Movement functions
+	void MoveForward(const FInputActionValue& Value);
+	void MoveRight(const FInputActionValue& Value);
+	
 };
