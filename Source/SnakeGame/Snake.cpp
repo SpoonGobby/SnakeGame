@@ -50,7 +50,8 @@ void ASnake::BeginPlay()
 void ASnake::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	ASnake::MoveForward(MovementSpeed);
 }
 
 // Called to bind functionality to input
@@ -61,7 +62,8 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		// Bind MoveForward action
-		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASnake::MoveForward);
+		//I might re enable this later and add some stuff to make you move faster/slower when holding down W/S
+		//EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASnake::MoveForward);
 		
 		// Bind MoveRight Action
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ASnake::MoveRight);
@@ -72,10 +74,7 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ASnake::MoveForward(const FInputActionValue& Value)
 {
 	const float MovementValue = Value.Get<float>();
-	if (FloatingMovement && MovementValue != 0.0f)
-	{
-		FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
-	}
+	FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
 void ASnake::MoveRight(const FInputActionValue& Value)
