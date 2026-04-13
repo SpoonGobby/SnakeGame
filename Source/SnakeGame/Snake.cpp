@@ -24,6 +24,8 @@ ASnake::ASnake()
 
 	//Create and attach the floating movement component
 	FloatingMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
+	
+	
 }
 
 // Called when the game starts or when spawned
@@ -73,15 +75,15 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 //Handles forward/Backward movement
 void ASnake::MoveForward(const FInputActionValue& Value)
 {
-	const float MovementValue = Value.Get<float>();
+	const float MovementValue = Value.Get<float>() * MovementSpeed;
 	FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
 void ASnake::MoveRight(const FInputActionValue& Value)
 {
-	const float MovementValue = Value.Get<float>();
+	const float MovementValue = Value.Get<float>() * RotationSpeed;
 	if (FloatingMovement && MovementValue != 0.0f)
 	{
-		FloatingMovement->AddInputVector(GetActorRightVector() * MovementValue);
+		AddActorLocalRotation(FRotator(0, MovementValue, 0));
 	}
 }

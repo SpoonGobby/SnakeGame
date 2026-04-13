@@ -50,5 +50,6 @@ class SNAKEGAME_API ASnake : public APawn
 	//Movement functions
 	void MoveForward(const FInputActionValue& Value);
 	void MoveRight(const FInputActionValue& Value);
-	float MovementSpeed = 1;
+	const float MovementSpeed = 1;
+	const float RotationSpeed = 1;
 };
