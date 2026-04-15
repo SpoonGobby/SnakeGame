@@ -35,6 +35,8 @@ class SNAKEGAME_API AFood : public AActor
 	UPROPERTY()
 	USceneComponent* DefaultSceneRoot;
 	
+	
+	
 	UFUNCTION() void OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

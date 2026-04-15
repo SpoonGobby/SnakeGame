@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Components/SphereComponent.h"
 
 
 
@@ -24,14 +25,13 @@ ASnake::ASnake()
 
 	//Create and attach the floating movement component
 	FloatingMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
-	
-	
 }
 
 // Called when the game starts or when spawned
 void ASnake::BeginPlay()
 {
 	Super::BeginPlay();
+	MeshComponent->OnComponentHit.AddDynamic(this, &ASnake::OnComponentHit);
 	
 	//Get the player controller
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -46,6 +46,9 @@ void ASnake::BeginPlay()
 			Subsystem->AddMappingContext(InputMappingContext,0);
 		}
 	}
+	
+	
+	
 }
 
 // Called every frame
@@ -79,7 +82,6 @@ void ASnake::MoveForward(const FInputActionValue& Value)
 	FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
-//
 void ASnake::RotateLeftRight(const FInputActionValue& Value)
 {
 	const float MovementValue = Value.Get<float>() * RotationSpeed;
@@ -87,4 +89,14 @@ void ASnake::RotateLeftRight(const FInputActionValue& Value)
 	{
 		AddActorLocalRotation(FRotator(0, MovementValue, 0));
 	}
+}
+
+void ASnake::EatFood()
+{
+	//UE_LOG(LogTemp, Log, TEXT("Waow!!!")); (works)
+}
+
+void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Log, TEXT("Waow!!!"));
 }
