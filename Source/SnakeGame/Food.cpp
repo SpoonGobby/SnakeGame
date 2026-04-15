@@ -12,14 +12,14 @@ AFood::AFood()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(FName("DefaultSceneRoot"));
-	SetRootComponent(DefaultSceneRoot);
+	//DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(FName("DefaultSceneRoot"));
+	//SetRootComponent(DefaultSceneRoot);
 	
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMesh"));
 	MeshComponent->SetupAttachment(DefaultSceneRoot);
 	
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
-	BoxComponent->SetBoxExtent(FVector(74.0f, 125.0f, 100.0f));
+	BoxComponent->SetBoxExtent(FVector(20.0f, 20.0f, 20.0f));
 	BoxComponent->SetupAttachment(MeshComponent);
 	BoxComponent->SetRelativeLocation(FVector(0.0f,0.0f, 100.0f));
 	
