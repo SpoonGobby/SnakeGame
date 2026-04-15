@@ -68,7 +68,7 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		//EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASnake::MoveForward);
 		
 		// Bind MoveRight Action
-		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ASnake::MoveRight);
+		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ASnake::RotateLeftRight);
 	}
 }
 
@@ -79,7 +79,8 @@ void ASnake::MoveForward(const FInputActionValue& Value)
 	FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
-void ASnake::MoveRight(const FInputActionValue& Value)
+//
+void ASnake::RotateLeftRight(const FInputActionValue& Value)
 {
 	const float MovementValue = Value.Get<float>() * RotationSpeed;
 	if (FloatingMovement && MovementValue != 0.0f)
