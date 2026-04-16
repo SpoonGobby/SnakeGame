@@ -32,12 +32,17 @@ class SNAKEGAME_API AFood : public AActor
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UBoxComponent* BoxComponent;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
+	FVector BoundsOrigin;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
+	FVector BoundsExtents;
+	
+	
 	UPROPERTY()
 	USceneComponent* DefaultSceneRoot;
-	
-	
 	
 	UFUNCTION() void OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	void MoveFood();
 };

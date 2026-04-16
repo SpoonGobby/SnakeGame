@@ -21,7 +21,6 @@ AFood::AFood()
 	BoxComponent->SetBoxExtent(FVector(20.0f, 20.0f, 20.0f));
 	BoxComponent->SetupAttachment(MeshComponent);
 	BoxComponent->SetRelativeLocation(FVector(0.0f,0.0f, 100.0f));
-	
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +29,8 @@ void AFood::BeginPlay()
 	Super::BeginPlay();
 	
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this,&AFood::OnOverlapStart);
+	
+	MoveFood();
 }
 
 // Called every frame
@@ -44,8 +45,17 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 	ASnake* Snake = (ASnake*)OtherActor;
 	if (Snake != nullptr)
 	{
-		
 		Snake->EatFood();
+		
+		MoveFood();
 	}
+}
+
+void AFood::MoveFood()
+{
+	int X = FMath::RandRange(BoundsExtents.X, -BoundsExtents.X);
+	int Y = FMath::RandRange(BoundsExtents.Y, -BoundsExtents.Y);
+	FVector Location = FVector(BoundsOrigin.X + X, BoundsOrigin.Y + Y, 50);
+	TeleportTo(Location, this->GetActorRotation(), false);
 }
 

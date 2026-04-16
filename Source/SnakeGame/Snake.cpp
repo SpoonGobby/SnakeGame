@@ -9,7 +9,6 @@
 #include "InputActionValue.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "Components/SphereComponent.h"
 
 
 
@@ -46,7 +45,6 @@ void ASnake::BeginPlay()
 			Subsystem->AddMappingContext(InputMappingContext,0);
 		}
 	}
-	
 	
 	
 }
@@ -93,10 +91,10 @@ void ASnake::RotateLeftRight(const FInputActionValue& Value)
 
 void ASnake::EatFood()
 {
-	//UE_LOG(LogTemp, Log, TEXT("Waow!!!")); (works)
+	//Works
 }
 
 void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Log, TEXT("Waow!!!"));
+	//works
 }
