@@ -7,6 +7,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "Components/SplineComponent.h"
 #include "Snake.generated.h"
 
 class USphereComponent;
@@ -35,6 +36,12 @@ public:
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UStaticMeshComponent* MeshComponent;
 	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UInstancedStaticMeshComponent* InstancedMeshComponent;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USplineComponent* SplineComponent;
+	
 	UPROPERTY(VisibleAnywhere, category = "Movement")
 	UFloatingPawnMovement* FloatingMovement;
 	
@@ -60,6 +67,12 @@ public:
 	void RotateLeftRight(const FInputActionValue& Value);
 	const float MovementSpeed = 1;
 	const float RotationSpeed = 2;
+	
+private:
+	void GenerateSplinePoint();
+	int SnakeLength;
+	void MoveInstancedMeshComponent();
+	bool EatedFood;
 	
 public:
 	void EatFood();
