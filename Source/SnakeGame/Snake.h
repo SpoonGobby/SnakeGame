@@ -7,6 +7,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "SnakeFollower.h"
 #include "Components/SplineComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Snake.generated.h"
@@ -37,14 +38,8 @@ public:
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UStaticMeshComponent* MeshComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UInstancedStaticMeshComponent* InstancedMeshComponent;
-	
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USplineComponent* SplineComponent;
-	
-	UPROPERTY(VisibleAnywhere, category = "Components")
-	USphereComponent* SphereComponent;
 	
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UArrowComponent* ArrowComponent;
@@ -67,26 +62,27 @@ public:
 	UFUNCTION() void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 	//Movement functions
-	void MoveForward(const FInputActionValue& Value);
+	void MoveForward();
 	void RotateLeftRight(const FInputActionValue& Value);
 	
 private:
 	void GenerateSplinePoint();
-	int SnakeLength;
-	void MoveInstancedMeshComponent();
 	bool EatedFood;
 	
 	//Movement Speeds
 	const float MovementSpeed = 1;
 	const float RotationSpeed = 2;
-	const float LengthSpeedMod = 1.1;
+	const float LengthSpeedMod = 0.02;
 	
 	//Arrow
 	void RotateArrow();
 	
+	void Die();
 	
 public:
-	void EatFood();
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "OtherActors")
 	AActor* FoodActor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "OtherActors")
+	ASnakeFollower* SnakeFollowerActor;
 };

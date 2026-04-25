@@ -42,12 +42,17 @@ void AFood::Tick(float DeltaTime)
 void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Snake = (ASnake*)OtherActor;
-	UStaticMeshComponent* StaticMesh = Cast<UStaticMeshComponent>(OtherComp);
-	if (Snake != nullptr && StaticMesh != nullptr)
+	//UStaticMeshComponent* StaticMesh = Cast<UStaticMeshComponent>(OtherComp);
+	if (Snake != nullptr && OtherComp == Snake->MeshComponent)
 	{
-		Snake->EatFood();
-		
+		if (EatedFood)
+		{
+			EatedFood = false;
+			Snake->SnakeFollowerActor->Grow();
+		}
+		else EatedFood = true;
 		MoveFood();
+		
 	}
 }
 

@@ -2,13 +2,25 @@
 
 
 #include "SnakeFollower.h"
+#include "Components/InstancedStaticMeshComponent.h"
+
 
 // Sets default values
 ASnakeFollower::ASnakeFollower()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	
+	InstancedMeshComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMeshComponent"));
+	RootComponent = InstancedMeshComponent;
+	
+	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
+	
+	if (RootComponent)
+	{
+		SplineComponent->SetupAttachment(RootComponent);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -18,17 +30,18 @@ void ASnakeFollower::BeginPlay()
 	
 }
 
-// Called every frame
-void ASnakeFollower::Tick(float DeltaTime)
+void ASnakeFollower::Grow()
 {
-	Super::Tick(DeltaTime);
-
+	InstancedMeshComponent->AddInstance(FTransform(GetActorLocation()),true);
 }
 
-// Called to bind functionality to input
-void ASnakeFollower::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ASnakeFollower::MoveInstancedMeshComponent()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	for (int i = 0; i < InstancedMeshComponent->GetInstanceCount(); i++)
+	{
+		float Distance = (i+1)*100;
+		FVector Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+		FTransform Transform(Location);
+		InstancedMeshComponent->UpdateInstanceTransform(i, Transform, true);
+	}
 }
-

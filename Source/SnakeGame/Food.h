@@ -48,4 +48,7 @@ public:
 	void MoveFood();
 	
 	ASnake* Snake;
+	
+private:
+	bool EatedFood;
 };

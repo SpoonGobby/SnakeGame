@@ -11,6 +11,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 float Time = 1;
 
@@ -23,7 +24,6 @@ ASnake::ASnake()
 	//Create and attach a static mesh component
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 
-	InstancedMeshComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMeshComponent"));
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
 	ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
 	
@@ -33,7 +33,6 @@ ASnake::ASnake()
 	{
 		ArrowComponent->SetupAttachment(RootComponent);
 		SplineComponent->SetupAttachment(RootComponent);
-		InstancedMeshComponent->SetupAttachment(RootComponent);
 	}
 	
 	//Create and attach the floating movement component
@@ -46,7 +45,7 @@ void ASnake::BeginPlay()
 	Super::BeginPlay();
 	MeshComponent->OnComponentHit.AddDynamic(this, &ASnake::OnComponentHit);
 	
-	//Get the player controller
+	//Get the player controller	
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
@@ -67,10 +66,12 @@ void ASnake::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	Time = DeltaTime;
 	
-	MoveForward(DeltaTime);
+	MoveForward();
 	GenerateSplinePoint();
-	MoveInstancedMeshComponent();
+	SnakeFollowerActor->MoveInstancedMeshComponent();
 	RotateArrow();
+	
+	
 }
 
 // Called to bind functionality to input
@@ -90,9 +91,9 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 //Handles forward/Backward movement
-void ASnake::MoveForward(const FInputActionValue& Value)
+void ASnake::MoveForward()
 {
-		const float MovementValue = MovementSpeed * 0.8 * (1 + 0.02 * InstancedMeshComponent->GetInstanceCount());
+		const float MovementValue = MovementSpeed * 0.8 * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount() * GetWorld()->GetDeltaSeconds());
 		FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
@@ -106,19 +107,14 @@ void ASnake::RotateLeftRight(const FInputActionValue& Value)
 	}
 }
 
-void ASnake::EatFood()
-{
-	if (EatedFood)
-	{
-		InstancedMeshComponent->AddInstance(FTransform(GetActorLocation()),true);
-		EatedFood = false;
-	}
-	else EatedFood = true;
-}
-
 void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//works
+	UE_LOG(LogTemp, Warning, TEXT("Collision :D"));
+}
+
+void ASnake::Die()
+{
+	
 }
 
 void ASnake::GenerateSplinePoint()
@@ -128,17 +124,6 @@ void ASnake::GenerateSplinePoint()
 	Point.Position = GetActorLocation();
 	Point.Rotation = GetActorRotation();
 	SplineComponent->AddPoint(Point,true);
-}
-
-void ASnake::MoveInstancedMeshComponent()
-{
-	for (int i = 0; i < InstancedMeshComponent->GetInstanceCount(); i++)
-	{
-		float Distance = (i+1)*100;
-		FVector Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
-		FTransform Transform(Location);
-		InstancedMeshComponent->UpdateInstanceTransform(i, Transform, true);
-	}
 }
 
 void ASnake::RotateArrow()

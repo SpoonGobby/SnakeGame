@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SplineComponent.h"
 #include "GameFramework/Pawn.h"
 #include "SnakeFollower.generated.h"
+
 
 UCLASS()
 class SNAKEGAME_API ASnakeFollower : public APawn
@@ -21,9 +23,12 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UInstancedStaticMeshComponent* InstancedMeshComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", Meta = (ExposeOnSpawn="true"))
+	USplineComponent* SplineComponent;
+	
+	void Grow();
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	void MoveInstancedMeshComponent();
 };
