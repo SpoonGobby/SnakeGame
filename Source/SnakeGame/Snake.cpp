@@ -10,6 +10,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -21,13 +22,12 @@ ASnake::ASnake()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	//Create and attach a static mesh component
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	RootComponent = MeshComponent;
 
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
 	ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
 	
-	RootComponent = MeshComponent;
 	
 	if (RootComponent)
 	{
@@ -35,7 +35,6 @@ ASnake::ASnake()
 		SplineComponent->SetupAttachment(RootComponent);
 	}
 	
-	//Create and attach the floating movement component
 	FloatingMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
 }
 
@@ -49,10 +48,8 @@ void ASnake::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
-		//Get the enhanced input subsystem from the local player
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 		
-		//Add the input mapping context to the subsystem
 		if (Subsystem && InputMappingContext)
 		{
 			Subsystem->AddMappingContext(InputMappingContext,0);
@@ -81,11 +78,9 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		// Bind MoveForward action
 		//I might re enable this later and add some stuff to make you move faster/slower when holding down W/S
 		//EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASnake::MoveForward);
 		
-		// Bind MoveRight Action
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ASnake::RotateLeftRight);
 	}
 }
@@ -99,7 +94,6 @@ void ASnake::MoveForward()
 
 void ASnake::RotateLeftRight(const FInputActionValue& Value)
 {
-	
 	const float Rotationvalue = Value.Get<float>() * RotationSpeed * 200 * GetWorld()->GetDeltaSeconds();
 	if (Rotationvalue != 0.0f)
 	{
@@ -109,7 +103,7 @@ void ASnake::RotateLeftRight(const FInputActionValue& Value)
 
 void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Collision :D"));
+	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
 }
 
 void ASnake::Die()

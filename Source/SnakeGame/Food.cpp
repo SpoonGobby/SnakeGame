@@ -8,9 +8,6 @@
 // Sets default values
 AFood::AFood()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	
 	//Creates the mesh component
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMesh"));
 	MeshComponent->SetupAttachment(DefaultSceneRoot);
@@ -31,14 +28,6 @@ void AFood::BeginPlay()
 	
 	MoveFood();
 }
-
-// Called every frame
-void AFood::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Snake = (ASnake*)OtherActor;
