@@ -10,7 +10,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Components/InstancedStaticMeshComponent.h"
-#include "Components/SplineComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 float Time = 1;
 
@@ -25,12 +25,13 @@ ASnake::ASnake()
 
 	InstancedMeshComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMeshComponent"));
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
+	ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
 	
 	RootComponent = MeshComponent;
 	
-	
 	if (RootComponent)
 	{
+		ArrowComponent->SetupAttachment(RootComponent);
 		SplineComponent->SetupAttachment(RootComponent);
 		InstancedMeshComponent->SetupAttachment(RootComponent);
 	}
@@ -58,7 +59,6 @@ void ASnake::BeginPlay()
 			Subsystem->AddMappingContext(InputMappingContext,0);
 		}
 	}
-	
 }
 
 // Called every frame
@@ -70,6 +70,7 @@ void ASnake::Tick(float DeltaTime)
 	MoveForward(DeltaTime);
 	GenerateSplinePoint();
 	MoveInstancedMeshComponent();
+	RotateArrow();
 }
 
 // Called to bind functionality to input
@@ -91,14 +92,15 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 //Handles forward/Backward movement
 void ASnake::MoveForward(const FInputActionValue& Value)
 {
-		const float MovementValue = MovementSpeed * 50 / Time;
+		const float MovementValue = MovementSpeed * 0.8 * (1 + 0.02 * InstancedMeshComponent->GetInstanceCount());
 		FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
 void ASnake::RotateLeftRight(const FInputActionValue& Value)
 {
-	const float Rotationvalue = Value.Get<float>() * RotationSpeed * 5;
-	if (FloatingMovement && Rotationvalue != 0.0f)
+	
+	const float Rotationvalue = Value.Get<float>() * RotationSpeed * 200 * GetWorld()->GetDeltaSeconds();
+	if (Rotationvalue != 0.0f)
 	{
 		AddActorLocalRotation(FRotator(0, Rotationvalue, 0));
 	}
@@ -137,4 +139,9 @@ void ASnake::MoveInstancedMeshComponent()
 		FTransform Transform(Location);
 		InstancedMeshComponent->UpdateInstanceTransform(i, Transform, true);
 	}
+}
+
+void ASnake::RotateArrow()
+{
+	ArrowComponent->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), FoodActor->GetActorLocation()));
 }

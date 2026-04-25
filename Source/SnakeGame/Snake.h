@@ -8,6 +8,7 @@
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "Components/SplineComponent.h"
+#include "Components/ArrowComponent.h"
 #include "Snake.generated.h"
 
 class USphereComponent;
@@ -42,11 +43,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USplineComponent* SplineComponent;
 	
-	UPROPERTY(VisibleAnywhere, category = "Movement")
-	UFloatingPawnMovement* FloatingMovement;
-	
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	USphereComponent* SphereComponent;
+	
+	UPROPERTY(VisibleAnywhere, category = "Components")
+	UArrowComponent* ArrowComponent;
+	
+	UPROPERTY(VisibleAnywhere, category = "Movement")
+	UFloatingPawnMovement* FloatingMovement;
 	
 	//Input actions for enhanced input
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -65,8 +69,6 @@ public:
 	//Movement functions
 	void MoveForward(const FInputActionValue& Value);
 	void RotateLeftRight(const FInputActionValue& Value);
-	const float MovementSpeed = 1;
-	const float RotationSpeed = 2;
 	
 private:
 	void GenerateSplinePoint();
@@ -74,7 +76,17 @@ private:
 	void MoveInstancedMeshComponent();
 	bool EatedFood;
 	
+	//Movement Speeds
+	const float MovementSpeed = 1;
+	const float RotationSpeed = 2;
+	const float LengthSpeedMod = 1.1;
+	
+	//Arrow
+	void RotateArrow();
+	
+	
 public:
 	void EatFood();
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
+	AActor* FoodActor;
 };

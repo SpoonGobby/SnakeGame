@@ -4,7 +4,6 @@
 #include "Food.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-#include "Snake.h"
 
 // Sets default values
 AFood::AFood()
@@ -42,8 +41,9 @@ void AFood::Tick(float DeltaTime)
 
 void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	ASnake* Snake = (ASnake*)OtherActor;
-	if (Snake != nullptr)
+	Snake = (ASnake*)OtherActor;
+	UStaticMeshComponent* StaticMesh = Cast<UStaticMeshComponent>(OtherComp);
+	if (Snake != nullptr && StaticMesh != nullptr)
 	{
 		Snake->EatFood();
 		

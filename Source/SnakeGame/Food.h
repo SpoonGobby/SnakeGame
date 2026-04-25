@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Snake.h"
 #include "GameFramework/Actor.h"
 #include "Food.generated.h"
 
@@ -13,17 +14,17 @@ class SNAKEGAME_API AFood : public AActor
 {
 	GENERATED_BODY()
 	
-	public:	
-		// Sets default values for this actor's properties
-		AFood();
+public:	
+	// Sets default values for this actor's properties
+	AFood();
 
-	protected:
-		// Called when the game starts or when spawned
-		virtual void BeginPlay() override;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
-	public:	
-		// Called every frame
-		virtual void Tick(float DeltaTime) override;
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 	
 	//Components
 	UPROPERTY(VisibleAnywhere, category = "Components")
@@ -45,4 +46,6 @@ class SNAKEGAME_API AFood : public AActor
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void MoveFood();
+	
+	ASnake* Snake;
 };
