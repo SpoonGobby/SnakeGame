@@ -103,12 +103,12 @@ void ASnake::RotateLeftRight(const FInputActionValue& Value)
 
 void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
+	Die();
 }
 
 void ASnake::Die()
 {
-	
+	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
 }
 
 void ASnake::GenerateSplinePoint()
