@@ -2,6 +2,9 @@
 
 
 #include "Food.h"
+
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "SnakeFollower.h"
@@ -10,14 +13,18 @@
 AFood::AFood()
 {
 	//Creates the mesh component
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMesh"));
-	MeshComponent->SetupAttachment(DefaultSceneRoot);
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	RootComponent = MeshComponent;
 	
 	//Creates the box component
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	BoxComponent->SetBoxExtent(FVector(20.0f, 20.0f, 20.0f));
-	BoxComponent->SetupAttachment(MeshComponent);
 	BoxComponent->SetRelativeLocation(FVector(0.0f,0.0f, 100.0f));
+	
+	if (RootComponent)
+	{
+		BoxComponent->SetupAttachment(RootComponent);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +33,7 @@ void AFood::BeginPlay()
 	Super::BeginPlay();
 	
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this,&AFood::OnOverlapStart);
+	
 	
 	MoveFood();
 }
@@ -41,6 +49,7 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 			if (Snake != nullptr && Snake->SnakeFollowerActor != nullptr && OtherComp == Snake->MeshComponent)
 			{
 				Snake->SnakeFollowerActor->Grow();
+				CreateParticles();
 				MoveFood();
 			}
 		}
@@ -58,3 +67,19 @@ void AFood::MoveFood()
 	TeleportTo(Location, this->GetActorRotation(), false);
 }
 
+void AFood::CreateParticles()
+{
+	if (NiagaraSystem) 
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			NiagaraSystem,
+			GetActorLocation(),
+			GetActorRotation(),
+			FVector(1.f), // Scale
+			true,         // Auto-destroy when finished
+			true,
+			ENCPoolMethod::None          // Auto-activate
+		);
+	}
+}

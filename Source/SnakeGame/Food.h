@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraSystem.h"
 #include "Snake.h"
 #include "GameFramework/Actor.h"
 #include "Food.generated.h"
@@ -30,6 +31,10 @@ public:
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UBoxComponent* BoxComponent;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Components")
+	TObjectPtr<UNiagaraSystem> NiagaraSystem;
+	
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
 	FVector BoundsOrigin;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
@@ -46,4 +51,6 @@ public:
 	
 private:
 	bool EatedFood;
+	
+	void CreateParticles();
 };
