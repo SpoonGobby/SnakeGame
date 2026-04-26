@@ -33,7 +33,6 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 {
 	ASnake* Snake = Cast<ASnake>(OtherActor);
 	ASnakeFollower* SnakeFollower = Cast<ASnakeFollower>(OtherActor);
-	//UStaticMeshComponent* StaticMesh = Cast<UStaticMeshComponent>(OtherComp);
 	if (Snake != nullptr && OtherComp == Snake->MeshComponent)
 	{
 		if (!EatedFood)
