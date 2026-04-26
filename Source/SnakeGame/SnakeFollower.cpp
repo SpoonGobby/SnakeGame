@@ -33,9 +33,7 @@ void ASnakeFollower::Grow()
 		UE_LOG(LogTemp, Error, TEXT("Grow called on Null or Invalid Component!"));
 		return;
 	}
-
-	FTransform NewTransform = GetActorTransform();
-	InstancedMeshComponent->AddInstance(NewTransform, true);
+	InstancedMeshComponent->AddInstance(GetActorTransform(), true);
 }
 
 void ASnakeFollower::MoveInstancedMeshComponent()
