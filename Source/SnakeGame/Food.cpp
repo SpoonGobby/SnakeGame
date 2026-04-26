@@ -4,6 +4,7 @@
 #include "Food.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "SnakeFollower.h"
 
 // Sets default values
 AFood::AFood()
@@ -30,19 +31,24 @@ void AFood::BeginPlay()
 }
 void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Snake = (ASnake*)OtherActor;
+	ASnake* Snake = Cast<ASnake>(OtherActor);
+	ASnakeFollower* SnakeFollower = Cast<ASnakeFollower>(OtherActor);
 	//UStaticMeshComponent* StaticMesh = Cast<UStaticMeshComponent>(OtherComp);
 	if (Snake != nullptr && OtherComp == Snake->MeshComponent)
 	{
-		if (EatedFood)
+		if (!EatedFood)
 		{
-			EatedFood = false;
-			Snake->SnakeFollowerActor->Grow();
+			EatedFood = true;
+			if (Snake != nullptr && Snake->SnakeFollowerActor != nullptr && OtherComp == Snake->MeshComponent)
+			{
+				Snake->SnakeFollowerActor->Grow();
+				MoveFood();
+			}
 		}
-		else EatedFood = true;
-		MoveFood();
-		
+		else EatedFood = false;
 	}
+	else if (SnakeFollower == nullptr)
+		MoveFood();
 }
 
 void AFood::MoveFood()

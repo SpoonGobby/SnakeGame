@@ -20,7 +20,6 @@ float Time = 1;
 ASnake::ASnake()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 	
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComponent;
@@ -63,12 +62,11 @@ void ASnake::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	Time = DeltaTime;
 	
-	MoveForward();
-	GenerateSplinePoint();
-	SnakeFollowerActor->MoveInstancedMeshComponent();
+	if (StartMoving)
+		MoveForward();
+		GenerateSplinePoint();
+		SnakeFollowerActor->MoveInstancedMeshComponent();
 	RotateArrow();
-	
-	
 }
 
 // Called to bind functionality to input
@@ -88,13 +86,15 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 //Handles forward/Backward movement
 void ASnake::MoveForward()
 {
-		const float MovementValue = MovementSpeed * 0.8 * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount() * GetWorld()->GetDeltaSeconds());
+		const float MovementValue = MovementSpeed * 0.8 * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount());
 		FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
 void ASnake::RotateLeftRight(const FInputActionValue& Value)
 {
-	const float Rotationvalue = Value.Get<float>() * RotationSpeed * 200 * GetWorld()->GetDeltaSeconds();
+	if (!StartMoving)
+		StartMoving = true;
+	const float Rotationvalue = Value.Get<float>() * RotationSpeed * 200 * GetWorld()->GetDeltaSeconds() * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount());
 	if (Rotationvalue != 0.0f)
 	{
 		AddActorLocalRotation(FRotator(0, Rotationvalue, 0));

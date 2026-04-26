@@ -64,6 +64,8 @@ public:
 	//Movement functions
 	void MoveForward();
 	void RotateLeftRight(const FInputActionValue& Value);
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "OtherActors")
+	float LengthSpeedMod = 0.02;
 	
 private:
 	void GenerateSplinePoint();
@@ -72,7 +74,7 @@ private:
 	//Movement Speeds
 	const float MovementSpeed = 1;
 	const float RotationSpeed = 2;
-	const float LengthSpeedMod = 0.02;
+	bool StartMoving = false;
 	
 	//Arrow
 	void RotateArrow();
