@@ -3,11 +3,13 @@
 
 #include "Food.h"
 
-#include "NiagaraComponent.h"
+#include "Snake.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "SnakeFollower.h"
+#include "AssetTypeActions/AssetDefinition_SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFood::AFood()
@@ -51,6 +53,7 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 				Snake->Score++;
 				Snake->SnakeFollowerActor->Grow();
 				CreateParticles();
+				UGameplayStatics::PlaySoundAtLocation(this, SoundOnEat, GetActorLocation());
 				MoveFood();
 			}
 		}

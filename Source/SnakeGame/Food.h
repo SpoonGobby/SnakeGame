@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "NiagaraSystem.h"
-#include "Snake.h"
 #include "GameFramework/Actor.h"
 #include "Food.generated.h"
 
@@ -33,6 +32,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Components")
 	TObjectPtr<UNiagaraSystem> NiagaraSystem;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "SoundComponent")
+	USoundBase* SoundOnEat;
 	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "SpawnLocation")
