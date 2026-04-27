@@ -21,7 +21,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	int HighScore;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
-	int LastScore;
+	int32 LastScore;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	bool Multiplayer;
 };

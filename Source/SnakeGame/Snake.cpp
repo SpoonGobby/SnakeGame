@@ -112,6 +112,8 @@ void ASnake::Die()
 		GameInst->LastScore = Score;
 		GameInst->HighScore = std::max(Score, GameInst->HighScore);
 	}
+	else
+		GameInst->LastScore = Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId();
 	
 	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
 }
