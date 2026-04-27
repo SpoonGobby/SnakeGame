@@ -107,8 +107,11 @@ void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 void ASnake::Die()
 {
 	UGameInst* GameInst = Cast<UGameInst>(GetWorld()->GetGameInstance());
-	GameInst->LastScore = Score;
-	GameInst->HighScore = std::max(Score, GameInst->HighScore);
+	if (!GameInst->Multiplayer)
+	{
+		GameInst->LastScore = Score;
+		GameInst->HighScore = std::max(Score, GameInst->HighScore);
+	}
 	
 	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
 }

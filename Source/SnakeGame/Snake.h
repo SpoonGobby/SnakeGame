@@ -55,7 +55,7 @@ public:
 	UInputAction* MoveRightAction;
 	
 	//Input mapping context
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputMappingContext* InputMappingContext;
 	
 	//Collision check
