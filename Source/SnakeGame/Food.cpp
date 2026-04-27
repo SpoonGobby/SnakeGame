@@ -48,14 +48,11 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 		if (!EatedFood)
 		{
 			EatedFood = true;
-			if (Snake != nullptr && Snake->SnakeFollowerActor != nullptr && OtherComp == Snake->MeshComponent)
-			{
-				Snake->Score++;
-				Snake->SnakeFollowerActor->Grow();
-				CreateParticles();
-				UGameplayStatics::PlaySoundAtLocation(this, SoundOnEat, GetActorLocation());
-				MoveFood();
-			}
+			Snake->Score++;
+			Snake->SnakeFollowerActor->Grow();
+			CreateParticles();
+			UGameplayStatics::PlaySoundAtLocation(this, SoundOnEat, GetActorLocation());
+			MoveFood();
 		}
 		else EatedFood = false;
 	}
@@ -65,10 +62,17 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 void AFood::MoveFood()
 {
-	int X = FMath::RandRange(BoundsExtents.X, -BoundsExtents.X);
-	int Y = FMath::RandRange(BoundsExtents.Y, -BoundsExtents.Y);
-	FVector Location = FVector(BoundsOrigin.X + X, BoundsOrigin.Y + Y, 50);
-	TeleportTo(Location, this->GetActorRotation(), false);
+	for (int32 i = 0; i < 500; i++)
+	{
+		int X = FMath::RandRange(BoundsExtents.X, -BoundsExtents.X);
+		int Y = FMath::RandRange(BoundsExtents.Y, -BoundsExtents.Y);
+		FVector Location = FVector(BoundsOrigin.X + X, BoundsOrigin.Y + Y, 50);
+		TeleportTo(Location, this->GetActorRotation(), false);
+
+		TArray<AActor*> OverlappingActors;
+		GetOverlappingActors(OverlappingActors);
+		if (OverlappingActors.Num() <= 1) break;
+	}
 }
 
 void AFood::CreateParticles()
