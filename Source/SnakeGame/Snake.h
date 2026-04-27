@@ -87,4 +87,6 @@ public:
 	AActor* FoodActor;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "OtherActors")
 	ASnakeFollower* SnakeFollowerActor;
+	
+	int Score;
 };

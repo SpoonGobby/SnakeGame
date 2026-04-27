@@ -13,8 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-
-float Time = 1;
+#include "GameInst.h"
 
 // Sets default values
 ASnake::ASnake()
@@ -42,7 +41,7 @@ void ASnake::BeginPlay()
 {
 	Super::BeginPlay();
 	MeshComponent->OnComponentHit.AddDynamic(this, &ASnake::OnComponentHit);
-	
+	Score = 0;
 	//Get the player controller	
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
@@ -60,7 +59,6 @@ void ASnake::BeginPlay()
 void ASnake::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	Time = DeltaTime;
 	
 	if (StartMoving)
 		MoveForward();
@@ -108,6 +106,10 @@ void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 void ASnake::Die()
 {
+	UGameInst* GameInst = Cast<UGameInst>(GetWorld()->GetGameInstance());
+	GameInst->LastScore = Score;
+	GameInst->HighScore = std::max(Score, GameInst->HighScore);
+	
 	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
 }
 

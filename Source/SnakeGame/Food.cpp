@@ -48,6 +48,7 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 			EatedFood = true;
 			if (Snake != nullptr && Snake->SnakeFollowerActor != nullptr && OtherComp == Snake->MeshComponent)
 			{
+				Snake->Score++;
 				Snake->SnakeFollowerActor->Grow();
 				CreateParticles();
 				MoveFood();
