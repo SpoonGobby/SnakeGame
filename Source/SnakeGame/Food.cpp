@@ -38,7 +38,6 @@ void AFood::BeginPlay()
 	
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this,&AFood::OnOverlapStart);
 	
-	
 	MoveFood();
 }
 void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -64,16 +63,34 @@ void AFood::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 void AFood::MoveFood()
 {
-	for (int32 i = 0; i < 500; i++)
+	for (int i = 0; i < 500; i++)
 	{
 		int X = FMath::RandRange(BoundsExtents.X, -BoundsExtents.X);
 		int Y = FMath::RandRange(BoundsExtents.Y, -BoundsExtents.Y);
-		FVector Location = FVector(BoundsOrigin.X + X, BoundsOrigin.Y + Y, 50);
-		TeleportTo(Location, this->GetActorRotation(), false);
+		FVector NewLocation = FVector(BoundsOrigin.X + X, BoundsOrigin.Y + Y, 55);
 
-		TArray<AActor*> OverlappingActors;
-		GetOverlappingActors(OverlappingActors);
-		if (OverlappingActors.Num() <= 0) break;
+		// Define the collision shape (use the same size as your food's collider)
+		FVector Origin;
+		FVector BoxExtent;
+		GetActorBounds(false, Origin, BoxExtent);
+		FCollisionShape MyShape = FCollisionShape::MakeBox(BoxExtent); 
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
+		// Check if anything is at that location
+		bool bHit = GetWorld()->OverlapAnyTestByChannel(
+			NewLocation, 
+			FQuat::Identity, 
+			ECC_WorldStatic, // Or ECC_Visibility/ECC_OverlapAll depending on your walls
+			MyShape, 
+			Params
+		);
+
+		if (!bHit)
+		{
+			SetActorLocation(NewLocation);
+			break;
+		}
 	}
 }
 

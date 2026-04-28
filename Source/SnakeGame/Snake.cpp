@@ -2,6 +2,8 @@
 
 
 #include "Snake.h"
+
+#include "EngineUtils.h"
 #include "Components/StaticMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "EnhancedInputComponent.h"
@@ -133,5 +135,15 @@ void ASnake::GenerateSplinePoint()
 
 void ASnake::RotateArrow()
 {
-	ArrowComponent->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), FoodActor->GetActorLocation()));
+	if (FoodActor != nullptr)
+		ArrowComponent->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), FoodActor->GetActorLocation()));
+	else
+	{
+		TArray<AActor*> FoundActors;
+		UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("Food"), FoundActors);
+		if (FoundActors.Num() != 0)
+		{
+			FoodActor = FoundActors[0];
+		}
+	}
 }
