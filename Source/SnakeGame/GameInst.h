@@ -24,4 +24,10 @@ public:
 	int32 LastScore;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	bool Multiplayer;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "GameplayBounds")
+	FVector BoundsOrigin;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "GameplayBounds")
+	FVector BoundsExtents;
+	
 };

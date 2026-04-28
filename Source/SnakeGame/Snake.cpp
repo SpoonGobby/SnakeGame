@@ -84,24 +84,28 @@ void ASnake::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 //Handles forward/Backward movement
 void ASnake::MoveForward()
 {
-		const float MovementValue = MovementSpeed * 0.8 * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount());
-		FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
+	FloatingMovement->MaxSpeed = (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount()) * 2000;
+	const float MovementValue = MovementSpeed * GetWorld()->GetDeltaSeconds() * 80 * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount());
+	FloatingMovement->AddInputVector(GetActorForwardVector() * MovementValue);
 }
 
 void ASnake::RotateLeftRight(const FInputActionValue& Value)
 {
 	if (!StartMoving)
 		StartMoving = true;
-	const float Rotationvalue = Value.Get<float>() * RotationSpeed * 200 * GetWorld()->GetDeltaSeconds() * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount());
-	if (Rotationvalue != 0.0f)
+	const float RotationValue = Value.Get<float>() * RotationSpeed * GetWorld()->GetDeltaSeconds() * 300 * (1 + LengthSpeedMod * SnakeFollowerActor->InstancedMeshComponent->GetInstanceCount());
+	if (RotationValue != 0.0f)
 	{
-		AddActorLocalRotation(FRotator(0, Rotationvalue, 0));
+		AddActorLocalRotation(FRotator(0, RotationValue, 0));
 	}
 }
 
 void ASnake::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Die();
+	
+	if (OtherActor != FoodActor)
+		Die();
+		
 }
 
 void ASnake::Die()
@@ -113,8 +117,8 @@ void ASnake::Die()
 		GameInst->HighScore = std::max(Score, GameInst->HighScore);
 	}
 	else
-		GameInst->LastScore = Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId();
-	
+    	GameInst->LastScore = Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId();
+    	
 	UGameplayStatics::OpenLevel(this, FName("MenuScreen"), true);
 }
 

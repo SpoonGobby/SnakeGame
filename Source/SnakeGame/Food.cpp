@@ -14,6 +14,8 @@
 // Sets default values
 AFood::AFood()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	
 	//Creates the mesh component
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	RootComponent = MeshComponent;
@@ -71,7 +73,7 @@ void AFood::MoveFood()
 
 		TArray<AActor*> OverlappingActors;
 		GetOverlappingActors(OverlappingActors);
-		if (OverlappingActors.Num() <= 1) break;
+		if (OverlappingActors.Num() <= 0) break;
 	}
 }
 

@@ -65,7 +65,7 @@ public:
 	void MoveForward();
 	void RotateLeftRight(const FInputActionValue& Value);
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "OtherActors")
-	float LengthSpeedMod = 0.02;
+	float LengthSpeedMod = 0;
 	
 private:
 	void GenerateSplinePoint();
